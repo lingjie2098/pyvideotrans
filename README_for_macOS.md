@@ -27,6 +27,34 @@
                     #     audio_chunk.export(data_item['ref_wav'],format='wav')
 ...
 ```
+## F5-TTS参考音频过短的处理方案
+[`_f5tts.py`](videotrans/tts/_f5tts.py)：
+```py
+...
+                if len(audio_chunk)<4000:
+                    audio_chunk=audio_chunk*2
+                    audio_chunk.export(data_item['ref_wav'],format='wav')
+                    data['ref_text']+=f". {data['ref_text']}"
+...
+```
+修改为：
+```py
+...
+                # 1倍 nothing to do
+                # 2倍
+                if len(audio_chunk)<4000:
+                    audio_chunk=audio_chunk*2
+                    audio_chunk.export(data_item['ref_wav'],format='wav')
+                    data['ref_text']+=f". {data['ref_text']}"
+                # n倍
+                # if len(audio_chunk)<4000:
+                #     import math
+                #     i=math.ceil(4000/len(audio_chunk))
+                #     audio_chunk=audio_chunk*i
+                #     audio_chunk.export(data_item['ref_wav'],format='wav')
+                #     data['ref_text']=". ".join([data['ref_text']]*i)
+...
+```
 ## 唇音不同步
 [`_rate.py`](videotrans/task/_rate.py)：
 ```py
